@@ -5,9 +5,5 @@ import type { Validation } from "./../../../presentation/protocols/validation";
 export const makeSaveKeyValidation = () => {
   const validations: Array<Validation> = [];
 
-  for (const field of ["accesstoken"]) {
-    validations.push(new RequiredFieldValidation(field));
-  }
-
   return new ValidationComposite(validations);
 };

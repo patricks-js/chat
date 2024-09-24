@@ -13,22 +13,22 @@ services:
     networks:
       - willchat-api_network
 
-  api:
-    env_file:
-      - .env.docker
-    build:
-      context: "."
-      dockerfile: Dockerfile
-    container_name: willchat-api
-    command: yarn dev
-    depends_on:
-      - postgresql
-    ports:
-      - "7070:7070"
-    volumes:
-      - ./:/app/
-    networks:
-      - willchat-api_network
+  # api:
+  #   env_file:
+  #     - .env.docker
+  #   build:
+  #     context: "."
+  #     dockerfile: Dockerfile
+  #   container_name: willchat-api
+  #   command: yarn dev
+  #   depends_on:
+  #     - postgresql
+  #   ports:
+  #     - "7070:7070"
+  #   volumes:
+  #     - ./:/app/
+  #   networks:
+  #     - willchat-api_network
 
 volumes:
   postgresql:

@@ -11,10 +11,67 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { socket } from "@/lib/socket";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
+  const searchParams = useSearchParams();
+  const chatKey = searchParams.get("token");
+
+  const [messages, setMessages] = useState<any[]>([]);
+  const [messageToSend, setMessageToSend] = useState<string>("");
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    socket.emit("JoinGroup", {
+      key: chatKey,
+    });
+
+    socket.emit("ReceiveAllMessages", {
+      key: chatKey,
+    });
+
+    console.log("aaa");
+
+    socket.on("ReceiveMessages", (value) => {
+      setMessages((prev) => [...prev, ...value]);
+    });
+
+    socket.on("Error", (err) => {
+      console.log(err);
+    });
+
+    return () => {
+      socket.off("ReceiveMessages");
+      socket.off("Error");
+    };
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const data = {
+      key: chatKey,
+      message: messageToSend,
+      userName: "Willian",
+      userId: "123",
+    };
+
+    socket.emit("SendMessage", data);
+
+    setMessages([...messages, data]);
+
+    setMessageToSend("");
   };
 
   return (
@@ -27,19 +84,21 @@ export default function Home() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 h-[600px] overflow-y-auto">
-          <Message>
-            asadsdasasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </Message>
-          <Message>
-            asadsdasasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </Message>
-          <Message>
-            asadsdasasaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </Message>
+          {messages.map((message: any, index: number) => (
+            <Message key={index}>{message.message}</Message>
+          ))}
+          <div ref={messagesEndRef} />
         </CardContent>
         <CardFooter>
           <form className="flex w-full gap-16" onSubmit={handleSubmit}>
-            <Input placeholder="Digite sua mensagem" className="w-full" />
+            <Input
+              id="email"
+              name="email"
+              placeholder="Digite sua mensagem"
+              className="w-full"
+              value={messageToSend}
+              onChange={(e) => setMessageToSend(e.target.value)}
+            />
             <Button className="w-60">Send</Button>
           </form>
         </CardFooter>

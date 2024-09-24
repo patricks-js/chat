@@ -8,7 +8,7 @@ import { AlreadyExistsError } from "../../errors/user-already-exists-error";
 export class SaveKeyController implements Controller {
   public constructor(
     private readonly validator: Validation,
-    private readonly saveKey: SaveKey
+    private readonly saveKey: SaveKey,
   ) {}
 
   public async handle(httpRequest: HttpRequest): Promise<HttpResponse> {

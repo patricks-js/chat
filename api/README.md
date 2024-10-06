@@ -1,5 +1,18 @@
 # API of willchat documentation
 
+# Start the API
+
+First, install the packages with `npm i` command, and then create the `.env` file with this local settings bellow:
+
+```
+URL_DATABASE=postgresql://root:root@localhost:5432/willchat
+PORT=7070
+```
+
+This database credential is according to the database that is confired in the docker-compose file, so you need to install the docker and docker-compose to execute this file settings, after install just type `docker compose up` to execute the database.
+
+Then you can execute the API using `npm run dev`.
+
 ## Routers
 
 In this application we use openId, so we need to pass the accessToken as header to get the id. That id is used for idetify user in the database. But, in some routers we don't need the accessToken, i'll identify this routers as `dont need accessToken`.

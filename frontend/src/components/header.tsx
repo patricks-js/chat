@@ -7,7 +7,10 @@ export default function Header() {
       <h1>Chat Jala</h1>
       <div>
         <SignedOut>
-          <SignInButton />
+          <SignInButton
+            fallbackRedirectUrl="/management"
+            forceRedirectUrl="/management"
+          />
         </SignedOut>
         <SignedIn>
           <UserButton />

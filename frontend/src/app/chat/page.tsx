@@ -13,9 +13,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { socket } from "@/lib/socket";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
 export default function Chat() {
+  const { isSignedIn } = useUser();
+
+  if (!isSignedIn) {
+    return redirect("/");
+  }
+
   const searchParams = useSearchParams();
   const chatKey = searchParams.get("token");
 

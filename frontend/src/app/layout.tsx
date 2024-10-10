@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider, useUser } from "@clerk/nextjs";
 import Header from "@/components/header";
 import { QueryClientOwnProvider } from "@/providers/query-client-own-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,13 +30,18 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <QueryClientOwnProvider>
-            <Header />
-            {children}
-          </QueryClientOwnProvider>
+        <body>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <QueryClientOwnProvider>
+              <Header />
+              {children}
+            </QueryClientOwnProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

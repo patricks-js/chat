@@ -10,6 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pencil, Trash } from "lucide-react";
+import EditDialog from "./edit-dialog";
+import { DeleteDialog } from "./delete-dialog";
 
 const invoices = [
   {
@@ -77,12 +79,8 @@ export function TableDemo() {
             <TableCell>{invoice.paymentMethod}</TableCell>
             <TableCell className="text-right">{invoice.totalAmount}</TableCell>
             <TableCell className="text-right">
-              <Button variant="ghost">
-                <Pencil size={20} />
-              </Button>
-              <Button variant="destructive">
-                <Trash size={20} />
-              </Button>
+              <EditDialog />
+              <DeleteDialog />
             </TableCell>
           </TableRow>
         ))}

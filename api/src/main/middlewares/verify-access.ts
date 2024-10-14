@@ -7,7 +7,7 @@ import { env } from "../config/env";
 export const verifyAccess = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const notNeedAccess = ["/key/message"];
   for (const path of notNeedAccess) {
@@ -17,14 +17,16 @@ export const verifyAccess = async (
   const { body, statusCode } = badRequest(new UnauthorizedError());
 
   try {
-    // const accessToken = req.headers.authorization as string;
-    // if (!accessToken) return res.status(statusCode).json(body);
-    // jwt.verify(accessToken, env.secret);
+    const accessToken = req.headers.authorization as string;
+    if (!accessToken) return res.status(statusCode).json(body);
 
-    // const info = jwt.decode(accessToken) as any;
-    console.log("test");
+    const token = accessToken.split(" ")[1];
 
-    req.accountId = "123";
+    // jwt.verify(token, env.secret);
+
+    const info = jwt.decode(token) as any;
+
+    req.accountId = info.sub;
     next();
   } catch {
     return res.status(statusCode).json(body);

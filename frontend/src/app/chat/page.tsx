@@ -19,7 +19,7 @@ import { useUser } from "@clerk/nextjs";
 export default function Chat() {
   const { isSignedIn } = useUser();
 
-  if (!isSignedIn) {
+  if (isSignedIn != undefined && !isSignedIn) {
     return redirect("/");
   }
 

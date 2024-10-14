@@ -14,7 +14,7 @@ export default function Management() {
 
   return (
     <div className="flex flex-col items-center h-[100vh]">
-      <div className="w-[80%] space-y-9">
+      <div className="w-[80%] space-y-9 border p-11 min-h-[80vh]">
         <div className="flex justify-end items-center">
           <NewChatDialog />
         </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,9 +12,32 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { api } from "@/lib/api";
+import { useAuth } from "@clerk/nextjs";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
 
-export function DeleteDialog() {
+export function DeleteDialog({ chatKey }: { chatKey: string }) {
+  const { getToken } = useAuth();
+  const queryClient = useQueryClient();
+
+  const deleteChatMutation = useMutation({
+    mutationFn: async (data: any) => {
+      await api.delete("/key", {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+          Key: data.key,
+        },
+      });
+    },
+    onSuccess: async () => {
+      await queryClient.refetchQueries({
+        queryKey: ["chat"],
+        type: "all",
+      });
+    },
+  });
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -30,7 +55,15 @@ export function DeleteDialog() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction
+            onClick={() =>
+              deleteChatMutation.mutate({
+                key: chatKey,
+              })
+            }
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

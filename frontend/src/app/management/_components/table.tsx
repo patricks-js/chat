@@ -10,13 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pencil, SquareArrowOutUpRight, Trash } from "lucide-react";
-import EditDialog from "./edit-dialog";
 import { DeleteDialog } from "./delete-dialog";
 import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { headers } from "next/headers";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const invoices = [
@@ -70,8 +67,6 @@ export function TableDemo() {
 
   if (chatQuery.isLoading) return <div>Loading...</div>;
 
-  const router = useRouter();
-
   return (
     <Table>
       <TableCaption>A list of your chats.</TableCaption>
@@ -83,18 +78,18 @@ export function TableDemo() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {chatQuery.data?.data.map((invoice: any) => (
-          <TableRow key={invoice.id}>
-            <TableCell className="font-medium">{invoice.id}</TableCell>
-            <TableCell>{invoice.userId}</TableCell>
-            <TableCell>{invoice.key}</TableCell>
+        {chatQuery.data?.data.map((chat: any) => (
+          <TableRow key={chat.id}>
+            <TableCell className="font-medium">{chat.id}</TableCell>
+            <TableCell>{chat.userId}</TableCell>
+            <TableCell>{chat.key}</TableCell>
             <TableCell className="text-right">
-              <Link href={`/chat?token=${invoice.id}`}>
+              <Link href={`/chat?token=${chat.id}`}>
                 <Button variant="ghost">
                   <SquareArrowOutUpRight />
                 </Button>
               </Link>
-              <DeleteDialog />
+              <DeleteDialog chatKey={chat.key} />
             </TableCell>
           </TableRow>
         ))}

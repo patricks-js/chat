@@ -22,7 +22,8 @@ export class GetMessageController implements Controller {
       });
 
       return ok(message);
-    } catch {
+    } catch (err) {
+      console.log(err);
       return serverError();
     }
   }

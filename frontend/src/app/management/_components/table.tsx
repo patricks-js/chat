@@ -84,7 +84,7 @@ export function TableDemo() {
             <TableCell>{chat.userId}</TableCell>
             <TableCell>{chat.key}</TableCell>
             <TableCell className="text-right">
-              <Link href={`/chat?token=${chat.id}`}>
+              <Link href={`/chat?token=${chat.key}`}>
                 <Button variant="ghost">
                   <SquareArrowOutUpRight />
                 </Button>

@@ -15,6 +15,8 @@ import { socket } from "@/lib/socket";
 import { useEffect, useRef, useState } from "react";
 import { redirect, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { api } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Chat() {
   const { isSignedIn } = useUser();
@@ -35,12 +37,17 @@ export default function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const allInitialMessagesQuery = useQuery(
+    ["allInitialMessages"],
+    async () => await api.get(`/key/message/${chatKey}`)
+  );
+
+  useEffect(() => {
+    setMessages(allInitialMessagesQuery.data?.data as any);
+  }, [allInitialMessagesQuery.data]);
+
   useEffect(() => {
     socket.emit("JoinGroup", {
-      key: chatKey,
-    });
-
-    socket.emit("ReceiveAllMessages", {
       key: chatKey,
     });
 
@@ -63,6 +70,8 @@ export default function Chat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  if (allInitialMessagesQuery.isLoading) return <div>Loading...</div>;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -91,7 +100,7 @@ export default function Chat() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 h-[600px] overflow-y-auto">
-          {messages.map((message: any, index: number) => (
+          {messages?.map((message: any, index: number) => (
             <Message key={index}>{message.message}</Message>
           ))}
           <div ref={messagesEndRef} />

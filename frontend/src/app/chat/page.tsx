@@ -19,7 +19,7 @@ import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Chat() {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
 
   if (isSignedIn != undefined && !isSignedIn) {
     return redirect("/");
@@ -51,7 +51,6 @@ export default function Chat() {
       key: chatKey,
     });
 
-    console.log("aaa");
 
     socket.on("ReceiveMessages", (value) => {
       setMessages((prev) => [...prev, ...value]);
@@ -79,9 +78,10 @@ export default function Chat() {
     const data = {
       key: chatKey,
       message: messageToSend,
-      userName: "Willian",
-      userId: "123",
+      userName: user?.firstName,
+      userId: user?.id,
     };
+    console.log(data)
 
     socket.emit("SendMessage", data);
 
@@ -101,7 +101,7 @@ export default function Chat() {
         </CardHeader>
         <CardContent className="space-y-4 h-[600px] overflow-y-auto">
           {messages?.map((message: any, index: number) => (
-            <Message key={index}>{message.message}</Message>
+            <Message key={index} user={message.userName}>{message.message}</Message>
           ))}
           <div ref={messagesEndRef} />
         </CardContent>

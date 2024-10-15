@@ -46,6 +46,8 @@ export default function Chat() {
     setMessages(allInitialMessagesQuery.data?.data as any);
   }, [allInitialMessagesQuery.data]);
 
+  console.log(allInitialMessagesQuery.data)
+
   useEffect(() => {
     socket.emit("JoinGroup", {
       key: chatKey,
@@ -81,7 +83,6 @@ export default function Chat() {
       userName: user?.firstName,
       userId: user?.id,
     };
-    console.log(data)
 
     socket.emit("SendMessage", data);
 
@@ -96,7 +97,7 @@ export default function Chat() {
         <CardHeader>
           <CardTitle className="text-center">Chat da bahia</CardTitle>
           <CardDescription className="text-center">
-            Chat destinado aos preguiçosos da jala university
+            Seja bem vindo ao seu chat privado aqui na WillChat
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 h-[600px] overflow-y-auto">
